@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2068bc01-8573-4672-9ee0-3c588e31d2e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/ru/otus/java/online/chat/Client.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/ru/otus/java/online/chat/ClientApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/ClientHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/ServerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +20,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
@@ -50,7 +43,7 @@
     "Application.ClientApplication.executor": "Run",
     "Application.ServerApplication.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "firstpart",
     "kotlin-language-version-configured": "true",
     "onboarding.tips.debug.path": "C:/Users/Компутер/IdeaProjects/otus-online-chat/Server/src/main/java/ru/otus/java/online/chat/Main.java"
   }
