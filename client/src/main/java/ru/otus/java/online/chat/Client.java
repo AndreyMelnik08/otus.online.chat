@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -24,6 +23,18 @@ public class Client {
                     if (message.equals("/exitok")) {
                         break;
                     }
+                    if (message.startsWith("/authok ")) {
+                        System.out.println("Удалось успешно войти в чат под именем пользователя: " + message.split(" ")[1]);
+                        continue;
+                    }
+                    if (message.startsWith("/regok ")) {
+                        System.out.println("Удалось успешно пройти регистрацию и войти в чат под именем пользователя: " + message.split(" ")[1]);
+                        continue;
+                    }
+                    if (message.equals("/kick")) {
+                        System.out.println("Вас удалили из чата");
+                        break;
+                    }
                     System.out.println(message);
                 }
             } catch (IOException e) {
@@ -32,11 +43,10 @@ public class Client {
                 disconnect();
             }
         }).start();
-
         while (true) {
             String message = scanner.nextLine();
             out.writeUTF(message);
-            if (message.equals("/exitok")) {
+            if (message.equals("/exit")) {
                 break;
             }
         }
@@ -52,14 +62,14 @@ public class Client {
         }
         try {
             if (out != null) {
-                in.close();
+                out.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             if (socket != null) {
-                in.close();
+                socket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

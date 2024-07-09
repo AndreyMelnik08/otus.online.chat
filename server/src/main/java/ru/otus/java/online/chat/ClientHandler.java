@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ClientHandler {
-
     private Server server;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
     private String username;
+
+    private Role role;
 
     public String getUsername() {
         return username;
@@ -21,17 +22,52 @@ public class ClientHandler {
         this.username = username;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
         this.socket = socket;
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
-        sendMessage("Введите ваше имя:");
-        String username = in.readUTF();
-        setUsername(username);
         new Thread(() -> {
             try {
                 System.out.println("Подключился новый клиент");
+                while (true) {
+                    String message = in.readUTF();
+                    if (message.equals("/exit")) {
+                        sendMessage("/exitok");
+                        return;
+                    }
+                    if (message.startsWith("/auth ")) {
+                        String[] elements = message.split(" ");
+                        if (elements.length != 3) {
+                            sendMessage("Неверный формат команды /auth");
+                            continue;
+                        }
+                        if (server.getAuthenticationProvider().authenticate(this, elements[1], elements[2])) {
+                            break;
+                        }
+                        continue;
+                    }
+                    if (message.startsWith("/register ")) {
+                        String[] elements = message.split(" ");
+                        if (elements.length != 4) {
+                            sendMessage("Неверный формат команды /register");
+                            continue;
+                        }
+                        if (server.getAuthenticationProvider().registration(this, elements[1], elements[2], elements[3])) {
+                            break;
+                        }
+                        continue;
+                    }
+                    sendMessage("Перед работой с чатом необходимо выполнить аутентификацию '/auth login password' или регистрацию '/register login password username'");
+                }
                 while (true) {
                     String message = in.readUTF();
                     if (message.startsWith("/")) {
@@ -39,17 +75,35 @@ public class ClientHandler {
                             sendMessage("/exitok");
                             break;
                         }
-                        if (message.equals("/w")) {
-                            out.writeUTF("Введите имя пользователя:");
-                            String privateUsername = in.readUTF();
-                            out.writeUTF("Введите сообщение:");
-                            String privateMessage = in.readUTF();
-                            server.sendPrivateMessage(privateUsername, privateMessage);
+                        if (message.startsWith("/w ")) {
+                            String[] elements = message.split(" ");
+                            if (elements.length != 3) {
+                                sendMessage("Неверный формат команды /w");
+                                continue;
+                            }
+                            server.privateMessage(elements[1], elements[2]);
+                            continue;
+                            //«/w tom Hello»
                         }
-                        continue;
+                        if (message.startsWith("/kick ")) {
+                            String[] elements = message.split(" ");
+                            if (elements.length != 2) {
+                                sendMessage("Неверный формат команды /kick");
+                                continue;
+                                // /auth login1 pass1
+                                // /auth login2 pass2
+                                // /kick tom
+                                //
+                            } else if (!server.getAuthenticationProvider().roleVerification(this)) {
+                                sendMessage("Недостаточно прав");
+                                continue;
+                            }
+                            server.kickUsername(elements[1]);
+                            sendMessage("Вы удалили: " + elements[1]);
+                            continue;
+                        }
                     }
-
-                    server.boardcastMessage(username + ":" + message);
+                    server.broadcastMessage(username + ": " + message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -67,7 +121,6 @@ public class ClientHandler {
         }
     }
 
-
     public void disconnect() {
         server.unsubscribe(this);
         try {
@@ -79,14 +132,14 @@ public class ClientHandler {
         }
         try {
             if (out != null) {
-                in.close();
+                out.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             if (socket != null) {
-                in.close();
+                socket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
