@@ -2,6 +2,7 @@ package ru.otus.java.online.chat;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +15,11 @@ public class Server {
         return authenticationProvider;
     }
 
-    public Server(int port) {
+    public Server(int port) throws SQLException {
         this.port = port;
         this.clients = new ArrayList<>();
         this.authenticationProvider = new InMemoryAuthenticationProvider(this);
+
     }
 
     public void start() {

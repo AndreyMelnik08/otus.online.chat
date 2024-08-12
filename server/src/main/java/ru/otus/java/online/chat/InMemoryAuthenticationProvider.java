@@ -1,10 +1,15 @@
 package ru.otus.java.online.chat;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+public class InMemoryAuthenticationProvider implements AuthenticationProvider, AutoCloseable {
+    private static final String DATABASE_URL = "jdbc:sqlite:C:/Users/Компутер/IdeaProjects/otus-online-chat/usersBD.db";
+    private static Connection connection;
+    private static String USERVALUE = "SELECT * FROM usersBD";
 
-public class InMemoryAuthenticationProvider implements AuthenticationProvider {
+    private static final String USERADD = "INSERT INTO usersBD (login, password, username, role) VALUES (?, ?, ?, ?)";
 
     private class User {
         private String login;
@@ -23,12 +28,25 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider {
     private Server server;
     private List<User> users;
 
-    public InMemoryAuthenticationProvider(Server server) {
+
+    public InMemoryAuthenticationProvider(Server server) throws SQLException {
+        connection = DriverManager.getConnection(DATABASE_URL);
         this.server = server;
         this.users = new ArrayList<>();
-        this.users.add(new User("login1", "pass1", "bob", Role.ADMIN));
-        this.users.add(new User("login2", "pass2", "tom", Role.USER));
-        this.users.add(new User("login3", "pass3", "user3", Role.USER));
+        try (Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(USERVALUE)) {
+                while (resultSet.next()) {
+                    String login = resultSet.getString(2);
+                    String password = resultSet.getString(3);
+                    String username = resultSet.getString(4);
+                    Role role = Role.valueOf(resultSet.getString(5));
+                    User user = new User(login, password, username, role);
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -105,11 +123,23 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider {
             clientHandler.sendMessage("Указанное имя пользователя уже занято");
             return false;
         }
-        users.add(new User(login, password, username, Role.USER));
-        clientHandler.setUsername(username);
-        clientHandler.setRole(Role.USER);
-        server.subscribe(clientHandler);
-        clientHandler.sendMessage("/regok " + username + ". Административные права: " + Role.USER);
+        try (PreparedStatement statement = connection.prepareStatement(USERADD)) {
+            statement.setString(2, login);
+            statement.setString(3, password);
+            statement.setString(4, username);
+            statement.setString(5, String.valueOf(Role.USER));
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Добавлен новый пользователь");
+                users.add(new User(login, password, username, Role.USER));
+                clientHandler.setUsername(username);
+                clientHandler.setRole(Role.USER);
+                server.subscribe(clientHandler);
+                clientHandler.sendMessage("/regok " + username + ". Административные права: " + Role.USER);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return true;
     }
 
@@ -119,5 +149,14 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void close() throws Exception {
+        try {
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -11,13 +11,12 @@ public class ClientHandler {
     private DataInputStream in;
     private DataOutputStream out;
     private String username;
-
     private Role role;
+
 
     public String getUsername() {
         return username;
     }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -25,10 +24,10 @@ public class ClientHandler {
     public Role getRole() {
         return role;
     }
-
     public void setRole(Role role) {
         this.role = role;
     }
+
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;

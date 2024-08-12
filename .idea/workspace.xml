@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2068bc01-8573-4672-9ee0-3c588e31d2e1" name="Changes" comment="commit">
+    <list default="true" id="2068bc01-8573-4672-9ee0-3c588e31d2e1" name="Changes" comment="-Добавлены административные права ADMIN, USER&#10;-Добавлен метод для ADMIN kickUsername(String username)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/ru/otus/java/online/chat/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/ru/otus/java/online/chat/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/ru/otus/java/online/chat/ClientApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/ru/otus/java/online/chat/ClientApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/InMemoryAuthenticationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/InMemoryAuthenticationProvider.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/ServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/ServerApplication.java" afterDir="false" />
     </list>
@@ -19,6 +23,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -26,7 +32,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="JDBS-task" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -42,16 +48,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.ClientApplication.executor": "Run",
-    "Application.ServerApplication.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "first-task",
-    "kotlin-language-version-configured": "true",
-    "onboarding.tips.debug.path": "C:/Users/Компутер/IdeaProjects/otus-online-chat/Server/src/main/java/ru/otus/java/online/chat/Main.java"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.ClientApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ServerApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;JDBS-task1&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Компутер/IdeaProjects/otus-online-chat/Server/src/main/java/ru/otus/java/online/chat/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.ClientApplication">
     <configuration name="ClientApplication" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ru.otus.java.online.chat.ClientApplication" />
@@ -83,6 +93,7 @@
       <list>
         <item itemvalue="Application.ClientApplication" />
         <item itemvalue="Application.ServerApplication" />
+        <item itemvalue="Application.ServerApplication" />
         <item itemvalue="Application.ClientApplication" />
         <item itemvalue="Application.ServerApplication" />
       </list>
@@ -113,7 +124,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720276061456</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="-Добавлены административные права ADMIN, USER&#10;-Добавлен метод для ADMIN kickUsername(String username)">
+      <option name="closed" value="true" />
+      <created>1720543398194</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1720543398194</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -121,7 +140,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="second-task" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -129,7 +160,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit" />
+    <MESSAGE value="-Добавлены административные права ADMIN, USER&#10;-Добавлен метод для ADMIN kickUsername(String username)" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Добавлены административные права ADMIN, USER&#10;-Добавлен метод для ADMIN kickUsername(String username)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -139,14 +171,13 @@
           <line>13</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/server/src/main/java/ru/otus/java/online/chat/Main.java</url>
-          <line>13</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.net.ConnectException" package="java.net" />
           <option name="timeStamp" value="4" />
+        </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.io.EOFException" package="java.io" />
+          <option name="timeStamp" value="7" />
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
