@@ -124,10 +124,10 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider, A
             return false;
         }
         try (PreparedStatement statement = connection.prepareStatement(USERADD)) {
-            statement.setString(2, login);
-            statement.setString(3, password);
-            statement.setString(4, username);
-            statement.setString(5, String.valueOf(Role.USER));
+            statement.setString(1, login);
+            statement.setString(2, password);
+            statement.setString(3, username);
+            statement.setString(4, String.valueOf(Role.USER));
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("Добавлен новый пользователь");
