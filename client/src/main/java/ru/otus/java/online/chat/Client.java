@@ -27,12 +27,18 @@ public class Client {
                         System.out.println("Удалось успешно войти в чат под именем пользователя: " + message.split(" ")[1]);
                         continue;
                     }
-                    if (message.startsWith("/regok ")) {
+                    if (message.startsWith("/regok")) {
                         System.out.println("Удалось успешно пройти регистрацию и войти в чат под именем пользователя: " + message.split(" ")[1]);
                         continue;
                     }
-                    if (message.equals("/kick")) {
+                    if (message.startsWith("/ban ")) {
                         System.out.println("Вас удалили из чата");
+                        disconnect();
+                        break;
+                    }
+                    if (message.equals("/shutdown")) {
+                        System.out.println("Администратор завершил работу сервера");
+                        disconnect();
                         break;
                     }
                     System.out.println(message);

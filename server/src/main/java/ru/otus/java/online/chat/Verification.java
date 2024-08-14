@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryAuthenticationProvider implements AuthenticationProvider, AutoCloseable {
+public class Verification implements AuthenticationProvider, AutoCloseable {
     private static final String DATABASE_URL = "jdbc:sqlite:C:/Users/Компутер/IdeaProjects/otus-online-chat/usersBD.db";
     private static Connection connection;
     private static String USERVALUE = "SELECT * FROM usersBD";
@@ -29,7 +29,7 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider, A
     private List<User> users;
 
 
-    public InMemoryAuthenticationProvider(Server server) throws SQLException {
+    public Verification(Server server) throws SQLException {
         connection = DriverManager.getConnection(DATABASE_URL);
         this.server = server;
         this.users = new ArrayList<>();
@@ -104,6 +104,8 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider, A
         }
         clientHandler.setUsername(authUsername);
         clientHandler.setRole(role);
+        clientHandler.setLogin(login);
+        clientHandler.setOnline(true);
         server.subscribe(clientHandler);
         clientHandler.sendMessage("/authok " + authUsername);
         return true;
@@ -130,12 +132,37 @@ public class InMemoryAuthenticationProvider implements AuthenticationProvider, A
             statement.setString(4, String.valueOf(Role.USER));
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("Добавлен новый пользователь");
                 users.add(new User(login, password, username, Role.USER));
                 clientHandler.setUsername(username);
                 clientHandler.setRole(Role.USER);
+                clientHandler.setLogin(login);
+                clientHandler.setOnline(true);
                 server.subscribe(clientHandler);
-                clientHandler.sendMessage("/regok " + username + ". Административные права: " + Role.USER);
+                clientHandler.sendMessage("/regok " + username);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean changeUsername(ClientHandler clientHandler, String newUsername) {
+        if (newUsername.trim().length() < 1) {
+            clientHandler.sendMessage("Имя пользователя должно содержать хотя бы 1 символ");
+            return false;
+        }
+        if (isUsernameAlreadyExist(newUsername)) {
+            clientHandler.sendMessage("Указанное имя пользователя уже занято");
+            return false;
+        }
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE usersBD SET username = ? WHERE login = ?")) {
+            statement.setString(1, newUsername);
+            statement.setString(2, clientHandler.getLogin());
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                clientHandler.setUsername(newUsername);
+                clientHandler.sendMessage("Имя пользователя успешно изменено на " + newUsername);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

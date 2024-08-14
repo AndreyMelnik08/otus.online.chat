@@ -4,6 +4,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClientHandler {
     private Server server;
@@ -11,12 +15,14 @@ public class ClientHandler {
     private DataInputStream in;
     private DataOutputStream out;
     private String username;
+    private String login;
     private Role role;
-
+    private boolean online;
 
     public String getUsername() {
         return username;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -24,10 +30,26 @@ public class ClientHandler {
     public Role getRole() {
         return role;
     }
+
     public void setRole(Role role) {
         this.role = role;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
@@ -82,17 +104,12 @@ public class ClientHandler {
                             }
                             server.privateMessage(elements[1], elements[2]);
                             continue;
-                            //«/w tom Hello»
                         }
-                        if (message.startsWith("/kick ")) {
+                        if (message.startsWith("/ban ")) {
                             String[] elements = message.split(" ");
                             if (elements.length != 2) {
-                                sendMessage("Неверный формат команды /kick");
+                                sendMessage("Неверный формат команды /ban");
                                 continue;
-                                // /auth login1 pass1
-                                // /auth login2 pass2
-                                // /kick tom
-                                //
                             } else if (!server.getAuthenticationProvider().roleVerification(this)) {
                                 sendMessage("Недостаточно прав");
                                 continue;
@@ -101,8 +118,32 @@ public class ClientHandler {
                             sendMessage("Вы удалили: " + elements[1]);
                             continue;
                         }
+                        if (message.startsWith("/changenick ")) {
+                            String[] elements = message.split(" ");
+                            if (elements.length != 2) {
+                                sendMessage("Неверный формат команды /changenick");
+                                continue;
+                            }
+                            server.getAuthenticationProvider().changeUsername(this, elements[1]);
+                            sendMessage("Вы удалили: " + elements[1]);
+                            continue;
+                        }
+                        if (message.startsWith("/activelist")) {
+                            server.onlineUsersInfo(this);
+                            continue;
+                        }
+                        if (message.startsWith("/shutdown")) {
+                            if (!server.getAuthenticationProvider().roleVerification(this)) {
+                                sendMessage("Недостаточно прав");
+                                continue;
+                            }
+                            System.out.println("Сервер остановлен");
+                            server.close();
+                            disconnect();
+                        }
                     }
                     server.broadcastMessage(username + ": " + message);
+                    disconnectIfInactive();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -114,7 +155,9 @@ public class ClientHandler {
 
     public void sendMessage(String message) {
         try {
-            out.writeUTF(message);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            String messageWithTime = message + " [" + LocalTime.now().format(formatter) + "]";
+            out.writeUTF(messageWithTime);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,5 +186,23 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void disconnectIfInactive() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    sendMessage("Вы были отключены из-за неактивности в течении 20 минут");
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    disconnect();
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 20 * 60 * 10000);
     }
 }
